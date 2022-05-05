@@ -19,11 +19,90 @@
             <li>&nbsp; | &nbsp;</li>
             <li><a href="projects.html">Projects</a></li>
             <li>&nbsp; | &nbsp;</li>
-            <li><a href="2022_Jenifer_Brown_CV_Tech.pdf">Resume</a></li> 
+            <li><a href="2022_Jenifer_Brown_CV_Tech.pdf" target="_blank">Resume</a></li> 
             <li>&nbsp; | &nbsp;</li>
             <li><a href="https://www.linkedin.com/in/jenifer-brown-34668b153/" target="_blank">LinkedIn</a></li>
         </ul>
     </nav>
+
+    <div class="side">
+        <p><strong>Jump To</strong></p>
+        <ul>
+            <li><a href="#colorbynumbers">Color by Numbers</a></li>
+            <br>
+            <li><a href="#lotterywheeler">My Lottery Wheeler</a></li>
+        </ul>
+    </div>
+
+    <div class="projectContent">
+    <h2 class="projectTitle" id="colorbynumbers">Color by Numbers Java Application - 
+        <a href="https://github.com/jenifer-brown/ColorByNumbers" target="_blank">GitHub Link</a></h2>
+    <p class="projectDescription">Color by Numbers is a game that is simple
+        and relaxing to play. The user selects a picture to color and then colors
+        in the image pixel by pixel. A pixel can only be filled if the user has selected
+        the color with a number that matches the number in that picture. An image
+        is complete once all pixels are filled in.
+    </p>
+<video width="960" height="540" controls>
+    <source src="videos/colorbynumbersdemo.mp4" type="video/mp4">
+    Your browser does not support this video.
+</video>
+
+    <p class="projectDescription">I created this Java application from scratch as a personal
+        project. I built the application module by module, focusing on implementing each feature
+        before adding complexity. To improve and build upon this application, I would like to 
+        generate a feature that can take in images and automatically create
+        a pixelated color by numbers template.
+    </p>
+
+    <h2 class="projectTitle" id="lotterywheeler">My Lottery Wheeler Android Mobile App - 
+        <a href="https://github.com/jenifer-brown/MyLotteryWheeler/" target="_blank">GitHub Link</a></h2>
+
+    <p class="projectDescription">My Lottery Wheeler is an Android mobile app that I built using
+        Java. Lottery wheeling is a strategy that allows players to create combinations of numbers
+        to be played in the lottery. If the player is playing a pick 5 lottery game, a player will
+        select at least 6 numbers to wheel. Those numbers will be combined to produce several combinations
+        of 5 numbers that can be played. Depending on the number of digits selected, the number of 
+        combinations the player wants to generate, and the wheel (or combination method) the player
+        uses, a player can be guaranteed a certain number of wins if a subset of their numbers are 
+        drawn in the lottery.
+    </p>
+
+    <p class="projectDescription">For example, a player wants to wheel 8 numbers. The player
+        then selects wheel #53008-1. With this wheel, if 3 of the player's 8 numbers show up
+        in the final lottery drawing, the player is guaranteed to match at least 3 numbers in
+        one of their combinations. This wheel generates 5 combinations to play. The "1" at the
+        end of the wheel number indicates one "power number" is needed to play. A power number
+        is a number that appears in all combinations generated. Not all wheels require power 
+        numbers. The final screen of the app shows the player the combinations to play.
+    </p>
+
+    <video width="640" height="360" controls>
+        <source src="videos/mylotterywheelerdemo.mp4" type="video/mp4">
+        Your browser does not support this video.
+    </video>
+
+    <p class="projectDescription">I created this Android mobile application based off of the 
+        lottery wheeling system created by Gail Howard (<a href="www.smartluck.com">smartluck.com</a>).
+        This system can be purchased as a book or computer application. However, there does
+        not yet exist a mobile app. Given that most people are on-the-go when purchasing lottery
+        tickets, I thought a mobile app incorporating this system would be a great addition.
+    </p>
+
+    <p class="projectDescription">This app includes a subset of hardcoded wheels to generate the number combinations.
+        To improve this app, I would incorporate an algorithm that can generate all of the relevant
+        wheels. In addition, the number field for this app is 1-43. Every state can set their own 
+        number field for pick 5 games. Thus, it would be useful to choose which state you are playing
+        in and provide the player with the correct number field. Lastly, this application uses a new
+        activity for each screen. Creating fragments instead of separate activities would make this 
+        app use less memory and take up less space.
+    </p>
+
+</div>
+
+
+
+
 </body>
 <footer>Copyright &copy; 2022 Jenifer Brown</footer>
 </html>
