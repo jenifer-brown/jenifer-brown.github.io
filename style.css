@@ -7,17 +7,31 @@ body {
     color: white;
 }
 
+header {
+    margin-top: 30px;
+}
+
 #headshot {
-    width: 225px;
-    height: 282px;
+    width: 30%;
+    height: 30%;
     border-radius: 40%;
     padding: 5px;
     background-color: rgb(29, 113, 223);
     display: block;
     margin-left: auto;
     margin-right:auto;
-    margin-top: 30px;
     margin-bottom: 50px;
+}
+
+.introcontent {
+    max-width: 1000px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.citation {
+    text-align: left;
 }
 
 .aboutpics {
@@ -44,7 +58,12 @@ figcaption {
 
 .side p {
     padding: 0;
+}
 
+.side ul {
+    list-style-type: none;
+    padding: 5px;
+    text-align: center;
 }
 
 p {
@@ -67,12 +86,16 @@ video {
 .projectContent {
     margin-left: auto;
     margin-right: auto;
+    padding-left: 20px;
     width: 80%;
     max-width: 1000px;
+    align-content: center;
 }
 
 .projectTitle {
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .projectDescription {
