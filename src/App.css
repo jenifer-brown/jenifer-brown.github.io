@@ -1,15 +1,11 @@
 #maincontent {
   width: 100%;
-  margin-left: 5px;
-  margin-right: 5px;
   height: 1280px;
   text-align: center;
 }
 
 .navbar {
   display: flex;
-  padding-left: 50px;
-  padding-right: 50px;
   align-items: center;
   align-self: center;
   justify-content: space-around;
@@ -17,6 +13,7 @@
   width: auto;
   background-color: aliceblue;
 }
+
 
 .button {
   float: left;
@@ -35,6 +32,46 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.mainContainer {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 10px;
+}
+
+.generatorBox {
+  display: block;
+}
+.generator {
+  grid-column: 1;
+  padding-top: 34.304px;
+  height: 100%;
+  max-height: 500px;
+  max-width: 100%;
+  background-color: darkblue;
+}
+
+.resultsBox {
+  grid-column: 2;
+  height: 100%;
+  max-height: 534px;
+  margin-top: 43.19px;
+  background-color:crimson;
+  overflow-y: auto;
+}
+
+p {
+  font-size: 100px;
+  height: 200px;
+}
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -48,19 +85,4 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.generator {
-  margin-top: auto;
-  max-width: 50%;
-  justify-self: right;
-  background-color: darkblue;
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

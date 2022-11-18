@@ -1,18 +1,19 @@
 import SingleResult from "./SingleResult"
 
-export default function Results(props) {
-    React.useEffect(() => {
-        showResults();
-    })
+const mockData = [
+    {name: "A"},
+    {name: "B"},
+    {name: "C"}
+]
 
-    function showResults() {
-        const results = document.querySelector(".results");
-        for (let i = 0; i < 2; i++) {
-            results.append(<SingleResult number={i + 1}/>)
-        }
-        return results;
-    }
+export default function Results(props) {
+
     return (
-        <div className="results"></div>
+
+        <div className="results">
+            {mockData.map((entry) => {
+                return <SingleResult name={entry.name}/>
+            })}
+        </div>
     )
 }
