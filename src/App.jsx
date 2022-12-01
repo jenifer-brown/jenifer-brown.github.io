@@ -11,7 +11,42 @@ import Tab from "./components/generator/Tab";
 
 function App() {
 
+  const [generatorType, setGeneratorType] = React.useState("");
+  const [type, setType] = React.useState("books");
+  const [number, setNumber] = React.useState(0);
+  const [update, setUpdate] = React.useState(false);
+  const [decade, setDecade] = React.useState(undefined);
+  const [genre, setGenre] = React.useState(undefined);
   
+  // Tab Functions
+  function handleTabClick(type) {
+    setGeneratorType(type);
+  }  
+
+  const tabs = [{type: "books"}, {type: "movies"}, {type: "shows"}];
+  const tabElements = tabs.map(tab => 
+    <Tab type={tab.type} handleClick={() => handleTabClick(tab.type)}/>);
+
+  
+  // Generator Functions
+  function handleSubmit(num) {
+    setNumber(num);
+    console.log("submit");
+  }
+
+  function getFilters(e, selector) {
+    switch (selector) {
+        case "decade":
+            setDecade(e.target.value);
+            console.log("set decade");
+            break;
+        case "genre":
+            setGenre(e.target.value);
+            console.log(genre);
+            break;
+      }
+  }
+
   return (
     <>
     <div className="App">
@@ -21,14 +56,16 @@ function App() {
       <div className="mainContainer">
         <div className="generatorBox">
           <div className="tabs">
-            <Tab type="books"/>
-            <Tab type="movies" />
-            <Tab type="shows" />
+            {tabElements}
           </div>
-          <Generator generatorType="Movie" className="generator"/>
+          <Generator 
+          className="generator" 
+          generatorType={generatorType} 
+          handleSubmit={handleSubmit}
+          getFilters={getFilters}/>
         </div>
         <div className="resultsBox">
-          <Results />
+        <Results type={type} number={number} />
          </div>
       </div>
     </div>

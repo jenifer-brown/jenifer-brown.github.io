@@ -7,11 +7,11 @@ const TabTypes = {
 
 export default function Tab(props) {
 
-    const { type } = props;
+    const { type, handleClick } = props;
 
     const className = type + "-tab";
 
-    function buttonTitle() {
+    const buttonTitle = React.useMemo(() => {
         switch (type) {
             case (TabTypes.Books.toLowerCase()):
                 return TabTypes.Books;
@@ -22,11 +22,11 @@ export default function Tab(props) {
             default:
                 return "";
         }
-        
-    }
+    }, []);
+
     return (
         <>
-        <button className={className}>{buttonTitle()}</button>
+        <button className={className} onClick={handleClick}>{buttonTitle}</button>
         </>
     )
 }
