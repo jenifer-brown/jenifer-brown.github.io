@@ -65,13 +65,15 @@ export default function Results(props) {
 					const searchResults = " ERROR: " + err;
 					console.log(searchResults);
 				});
-			promises.push(fetchPromise);
+			allData.current = data;
 		}
 	}, [type]);
 
 	function addResults() {
 		const invalidResults = [];
 		const selectedResults = [];
+		console.log("add results");
+		console.log("data length: " + allData.current.length);
 
 		while (
 			invalidResults.length + selectedResults.length < allData.current.length &&
@@ -79,12 +81,14 @@ export default function Results(props) {
 		) {
 			const index = getRandNum(selectedResults, invalidResults);
 			const entry = allData.current[index];
-			const isValid = isValidEntry(entry);
-			isValid && !selectedResults.includes(entry)
-				? selectedResults.push(entry)
-				: !invalidResults.includes(entry)
-				? invalidResults.push(entry)
-				: {};
+			console.log("add entry: " + entry);
+			//const isValid = isValidEntry(entry);
+			// isValid && !selectedResults.includes(entry)
+			// 	? selectedResults.push(entry)
+			// 	: !invalidResults.includes(entry)
+			// 	? invalidResults.push(entry)
+			// 	: {};
+			selectedResults.push(entry);
 		}
 		return selectedResults;
 	}
@@ -127,16 +131,33 @@ export default function Results(props) {
 	React.useEffect(() => {
 		if (number > 0) {
 			const selectedResults = addResults();
-			const allResults = selectedResults.map((entry) => (
-				<SingleResult
-					title={entry.title}
-					img={`https://image.tmdb.org/t/p/w500${entry.poster_path}`}
-					year={entry.release_date.substring(0, 4)}
-					summary={entry.overview}
-					movieId={entry.id}
-					runtime={runtimeData.current.get(entry.title)}
-				/>
-			));
+			let allResults;
+			if (type === "movies") {
+				allResults = selectedResults.map((entry) => (
+					<SingleResult
+						title={entry.title}
+						img={`https://image.tmdb.org/t/p/w500${entry.poster_path}`}
+						year={entry.release_date.substring(0, 4)}
+						summary={entry.overview}
+						movieId={entry.id}
+						runtime={runtimeData.current.get(entry.title)}
+					/>
+				));
+			} else if (type === "shows") {
+				console.log("map shows");
+				allResults = selectedResults.map((entry) => {
+					console.log(entry);
+					return (
+						<SingleResult
+							title={entry.name}
+							img={`https://image.tmdb.org/t/p/w500${entry.backdrop_path}`}
+							year={entry.first_air_date.substring(0, 4)}
+							summary={entry.overview}
+							movieId={entry.id}
+						/>
+					);
+				});
+			}
 			if (allResults.length === 0) {
 				allResults.push(noResults.current);
 			}
