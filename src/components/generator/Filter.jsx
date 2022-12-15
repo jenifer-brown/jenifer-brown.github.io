@@ -12,6 +12,7 @@ export default function Filter(props) {
 				name="decade"
 				value={props.decade}
 			>
+				<option value={undefined}>none</option>
 				<option value="2020">2020</option>
 				<option value="2010">2010</option>
 				<option value="2000">2000</option>
@@ -30,6 +31,7 @@ export default function Filter(props) {
 				name="genre"
 				value={props.genre}
 			>
+				<option value={undefined}>none</option>
 				<option value="10749">Romance</option>
 				<option value="28">Action</option>
 				<option value="35">Comedy</option>
@@ -43,9 +45,9 @@ export default function Filter(props) {
 					<label>Max Runtime</label>
 					<input
 						type="range"
-						min="30"
+						min="10"
 						step="10"
-						max="240"
+						max="180"
 						id="runtime"
 						className="runtime"
 						onInput={(e) => props.getFilters(e, "runtime")}

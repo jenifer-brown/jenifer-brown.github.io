@@ -10,7 +10,6 @@ import Tab from "./components/generator/Tab";
 
 function App() {
 	const [generatorType, setGeneratorType] = React.useState("");
-	const [type, setType] = React.useState("books");
 	const [number, setNumber] = React.useState(0);
 	const [update, setUpdate] = React.useState(false);
 	const [decade, setDecade] = React.useState(undefined);
@@ -19,6 +18,7 @@ function App() {
 
 	// Tab Functions
 	function handleTabClick(type) {
+		console.log(type);
 		setGeneratorType(type);
 	}
 
@@ -37,15 +37,20 @@ function App() {
 	function getFilters(e, selector) {
 		switch (selector) {
 			case "decade":
-				setDecade(e.target.value);
+				typeof e.target.value === "string"
+					? setDecade(e.target.value)
+					: setDecade(undefined);
 				console.log("set decade");
 				break;
 			case "genre":
-				setGenre(e.target.value);
+				typeof e.target.value === "string"
+					? setGenre(e.target.value)
+					: setGenre(undefined);
 				console.log(genre);
 				break;
 			case "runtime":
 				setRuntime(e.target.value);
+				console.log("Runtime change: " + e.target.value);
 		}
 	}
 
@@ -70,7 +75,7 @@ function App() {
 					</div>
 					<div className="resultsBox">
 						<Results
-							type={type}
+							type={generatorType}
 							number={number}
 							update={update}
 							decade={decade}

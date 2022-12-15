@@ -1,56 +1,91 @@
 import SingleResult from "./SingleResult";
 
 export default function Results(props) {
-	const { number, genre, decade, runtime } = props;
+	const { number, genre, decade, runtime, update, type } = props;
 	const [resultsArray, setResultsArray] = React.useState([]);
-	const [start, setStart] = React.useState(false);
-	const [allData, setAllData] = React.useState([]);
+	const allData = React.useRef([]);
+	const runtimeData = React.useRef(undefined);
+	const noResults = React.useRef(<SingleResult title="No Results Found!" />);
 
 	React.useEffect(() => {
 		let page = 1;
 		let promises = [];
 		const data = [];
-		while (page < 14) {
+		const runtimeMap = new Map();
+		if (type === "movies") {
+			console.log("movies");
+			while (page < 14) {
+				const fetchPromise = fetch(
+					`https://api.themoviedb.org/3/keyword/264386-lesbian/movies?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US&include_adult=false&page=${page}`
+				);
+				promises.push(fetchPromise);
+				page++;
+			}
+			Promise.all(promises)
+				.then((responses) => {
+					for (const response of responses) {
+						const output = response.json();
+						output.then((result) => {
+							if (result.id) {
+								data.push(...result.results);
+								for (const entry of result.results) {
+									fetch(
+										`https://api.themoviedb.org/3/movie/${entry.id}?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US`
+									)
+										.then((data) => data.json())
+										.then((newOutput) => {
+											runtimeMap.set(newOutput.title, newOutput.runtime);
+										})
+										.catch((err) => {
+											const searchResults = " ERROR: " + err;
+											console.log(searchResults);
+										});
+								}
+							}
+						});
+					}
+					runtimeData.current = runtimeMap;
+					allData.current = data;
+				})
+				.catch((err) => {
+					const searchResults = " ERROR: " + err;
+					console.log(searchResults);
+				});
+		} else if (type === "shows") {
+			console.log("shows");
 			const fetchPromise = fetch(
-				`https://api.themoviedb.org/3/keyword/264386-lesbian/movies?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US&include_adult=false&page=${page}`
-			);
+				`https://api.themoviedb.org/3/list/8231707?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US`
+			)
+				.then((response) => response.json())
+				.then((output) => {
+					data.push(...output.items);
+					console.log(output.items);
+				})
+				.catch((err) => {
+					const searchResults = " ERROR: " + err;
+					console.log(searchResults);
+				});
 			promises.push(fetchPromise);
-			page++;
 		}
-
-		Promise.all(promises)
-			.then((responses) => {
-				for (const response of responses) {
-					const output = response.json();
-					output.then((result) => {
-						if (result.id) {
-							data.push(...result.results);
-						}
-					});
-				}
-				setAllData(data);
-			})
-			.catch((err) => {
-				const searchResults = " ERROR: " + err;
-				console.log(searchResults);
-			});
-	}, []);
+	}, [type]);
 
 	function addResults() {
 		const invalidResults = [];
 		const selectedResults = [];
 
 		while (
-			invalidResults.length + selectedResults.length < allData.length &&
+			invalidResults.length + selectedResults.length < allData.current.length &&
 			selectedResults.length < number
 		) {
 			const index = getRandNum(selectedResults, invalidResults);
-			const entry = allData[index];
-			isValidEntry(entry)
+			const entry = allData.current[index];
+			const isValid = isValidEntry(entry);
+			isValid && !selectedResults.includes(entry)
 				? selectedResults.push(entry)
-				: invalidResults.push(entry);
+				: !invalidResults.includes(entry)
+				? invalidResults.push(entry)
+				: {};
 		}
-		console.log("selected results size: " + selectedResults.length);
 		return selectedResults;
 	}
 
@@ -59,7 +94,7 @@ export default function Results(props) {
 			const decadeMin = parseInt(decade);
 			const decadeMax = decadeMin + 9;
 			const year = parseInt(entry.release_date);
-			if (year < decadeMin || year > decadeMax) {
+			if (!year || year < decadeMin || year > decadeMax) {
 				return false;
 			}
 		}
@@ -69,57 +104,48 @@ export default function Results(props) {
 			}
 		}
 		if (runtime) {
-			const entryRuntime = getRuntime(entry);
-			console.log("runtime" + entryRuntime.then(() => runtime));
-			if (entryRuntime || entryRuntime > parseInt(runtime)) {
+			const entryRuntime = runtimeData.current.get(entry.title);
+			if (!entryRuntime || parseInt(entryRuntime) > parseInt(runtime)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	function getRuntime(entry) {
-		let runtime;
-		fetch(
-			`https://api.themoviedb.org/3/movie/${entry.id}?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US`
-		)
-			.then((response) => response.json())
-			.then((output) => {
-				console.log(output.runtime);
-				runtime = output.runtime;
-			})
-			.catch((err) => {
-				const searchResults = " ERROR: " + err;
-				console.log(searchResults);
-			});
-		return runtime;
-	}
-
 	function getRandNum(selectedResults, invalidResults) {
 		let index;
-		const max = allData.length;
+		const max = allData.current.length;
 		do {
 			index = Math.floor(Math.random() * max);
 		} while (
-			selectedResults.includes(allData[index]) &&
-			invalidResults.includes(allData[index])
+			selectedResults.includes(allData.current[index]) &&
+			invalidResults.includes(allData.current[index])
 		);
 		return index;
 	}
+
 	React.useEffect(() => {
-		const selectedResults = addResults();
-		console.log(allData);
-		const allResults = selectedResults.map((entry) => (
-			<SingleResult
-				title={entry.title}
-				img={`https://image.tmdb.org/t/p/w500${entry.poster_path}`}
-				year={entry.release_date.substring(0, 4)}
-				summary={entry.overview}
-				movieId={entry.id}
-			/>
-		));
-		setResultsArray(allResults);
-	}, [allData, number]);
+		if (number > 0) {
+			const selectedResults = addResults();
+			const allResults = selectedResults.map((entry) => (
+				<SingleResult
+					title={entry.title}
+					img={`https://image.tmdb.org/t/p/w500${entry.poster_path}`}
+					year={entry.release_date.substring(0, 4)}
+					summary={entry.overview}
+					movieId={entry.id}
+					runtime={runtimeData.current.get(entry.title)}
+				/>
+			));
+			if (allResults.length === 0) {
+				allResults.push(noResults.current);
+			}
+			setResultsArray(allResults);
+		}
+		return () => {
+			console.log("done");
+		};
+	}, [allData.current, number, update]);
 
 	return (
 		<div className="results">
