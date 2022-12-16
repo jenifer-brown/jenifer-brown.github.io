@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: black;
+    color: white;
+}
+
+header {
+    margin-top: 30px;
+}
+
+#headshot {
+    width: 30%;
+    height: 30%;
+    border-radius: 40%;
+    padding: 5px;
+    background-color: rgb(29, 113, 223);
+    display: block;
+    margin-left: auto;
+    margin-right:auto;
+    margin-bottom: 50px;
+}
+
+.introcontent {
+    max-width: 1000px;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.citation {
+    text-align: left;
+}
+
+.aboutpics {
+    width: 40%;
+    height: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+figcaption {
+    text-align: center;
+    padding-top: 10px;
+}
+
+
+.side {
+    position: fixed;
+    width: 15%;
+    height: auto;
+    float: left;
+    background-color: darkblue;
+}
+
+.side p {
+    padding: 0;
+}
+
+.side ul {
+    list-style-type: none;
+    padding: 5px;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 50px 50px 50px;
+    font-size: larger;
+}
+
+video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    width: 80%;
+    height: 80%;
+}
+
+.projectContent {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    width: 80%;
+    max-width: 1000px;
+    align-content: center;
+}
+
+.projectTitle {
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.projectDescription {
+    text-align: left;
+}
+
+header {
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+nav {
+    padding-bottom: 30px;
+}
+
+
+nav ul {
+    list-style-type: none;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+}
+nav li {
+    display: inline;
+}
+a {
+    text-decoration: none;
+    color: white;
+}
+a:hover {
+    text-decoration: underline;
+}
+footer {
+    padding-top: 50px;
+    text-align: center;
+}
+
