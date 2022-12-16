@@ -22,7 +22,8 @@ function App() {
 		setGeneratorType(type);
 		setDecade(undefined);
 		setGenre(undefined);
-		setRuntime(undefined);
+		type === "movies" ? setRuntime(180) : setRuntime(undefined);
+		//ssetUpdate((prev) => !prev);
 	}
 
 	const tabs = [{ type: "books" }, { type: "movies" }, { type: "shows" }];
