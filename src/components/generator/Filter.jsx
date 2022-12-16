@@ -24,22 +24,26 @@ export default function Filter(props) {
 				<option value="1940">1940</option>
 			</select>
 			<br />
-			<label>Genre</label>
-			<select
-				onChange={(e) => getFilters(e, "genre")}
-				id="genre"
-				name="genre"
-				value={props.genre}
-			>
-				<option value={undefined}>none</option>
-				<option value="10749">Romance</option>
-				<option value="28">Action</option>
-				<option value="35">Comedy</option>
-				<option value="53">Thriller</option>
-				<option value="27">Horror</option>
-			</select>
+			{type !== "books" && (
+				<div>
+					<label>Genre</label>
+					<select
+						onChange={(e) => getFilters(e, "genre")}
+						id="genre"
+						name="genre"
+						value={props.genre}
+					>
+						<option value={undefined}>none</option>
+						<option value="10749">Romance</option>
+						<option value="28">Action</option>
+						<option value="35">Comedy</option>
+						<option value="53">Thriller</option>
+						<option value="27">Horror</option>
+						<option value="18">Drama</option>
+					</select>
+				</div>
+			)}
 			<br />
-
 			{type === "movies" && (
 				<div>
 					<label>Max Runtime</label>

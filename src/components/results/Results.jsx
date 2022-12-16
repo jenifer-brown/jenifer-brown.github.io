@@ -3,7 +3,9 @@ import SingleResult from "./SingleResult";
 export default function Results(props) {
 	const { number, genre, decade, runtime, update, type } = props;
 	const [resultsArray, setResultsArray] = React.useState([]);
-	const allData = React.useRef([]);
+	const movieData = React.useRef(undefined);
+	const showData = React.useRef(undefined);
+	const bookData = React.useRef(undefined);
 	const runtimeData = React.useRef(undefined);
 	const noResults = React.useRef(<SingleResult title="No Results Found!" />);
 
@@ -13,6 +15,9 @@ export default function Results(props) {
 		const data = [];
 		const runtimeMap = new Map();
 		if (type === "movies") {
+			if (!!movieData.current) {
+				return;
+			}
 			console.log("movies");
 			while (page < 14) {
 				const fetchPromise = fetch(
@@ -45,50 +50,74 @@ export default function Results(props) {
 						});
 					}
 					runtimeData.current = runtimeMap;
-					allData.current = data;
+					movieData.current = data;
 				})
 				.catch((err) => {
 					const searchResults = " ERROR: " + err;
 					console.log(searchResults);
 				});
 		} else if (type === "shows") {
-			console.log("shows");
+			if (!!showData.current) {
+				console.log("no show data");
+				return;
+			}
+			console.log("find show data");
 			const fetchPromise = fetch(
 				`https://api.themoviedb.org/3/list/8231707?api_key=d8cb9be625954d1f4e586efec42d4e79&language=en-US`
 			)
 				.then((response) => response.json())
 				.then((output) => {
 					data.push(...output.items);
-					console.log(output.items);
 				})
 				.catch((err) => {
 					const searchResults = " ERROR: " + err;
 					console.log(searchResults);
 				});
-			allData.current = data;
+			showData.current = data;
+		} else if (type === "books") {
+			if (!!bookData.current) {
+				return;
+			}
+			const fetchPromise = fetch(`https://www.loc.gov/books/?q=lesbian&fo=json`)
+				.then((response) => response.json())
+				.then((output) => {
+					data.push(...output.results);
+				})
+				.catch((err) => {
+					const searchResults = " ERROR: " + err;
+					console.log(searchResults);
+				});
+			bookData.current = data;
 		}
 	}, [type]);
 
 	function addResults() {
 		const invalidResults = [];
 		const selectedResults = [];
-		console.log("add results");
-		console.log("data length: " + allData.current.length);
 
 		while (
-			invalidResults.length + selectedResults.length < allData.current.length &&
+			invalidResults.length + selectedResults.length <
+				(type === "movies"
+					? movieData.current.length
+					: type === "shows"
+					? showData.current.length
+					: bookData.current.length) &&
 			selectedResults.length < number
 		) {
 			const index = getRandNum(selectedResults, invalidResults);
-			const entry = allData.current[index];
-			console.log("add entry: " + entry);
-			//const isValid = isValidEntry(entry);
-			// isValid && !selectedResults.includes(entry)
-			// 	? selectedResults.push(entry)
-			// 	: !invalidResults.includes(entry)
-			// 	? invalidResults.push(entry)
-			// 	: {};
-			selectedResults.push(entry);
+			const entry =
+				type === "movies"
+					? movieData.current[index]
+					: type === "shows"
+					? showData.current[index]
+					: bookData.current[index];
+			const isValid = isValidEntry(entry);
+			console.log("is valid entry? : " + isValid);
+			isValid && !selectedResults.includes(entry)
+				? selectedResults.push(entry)
+				: !invalidResults.includes(entry)
+				? invalidResults.push(entry)
+				: {};
 		}
 		return selectedResults;
 	}
@@ -97,17 +126,25 @@ export default function Results(props) {
 		if (decade) {
 			const decadeMin = parseInt(decade);
 			const decadeMax = decadeMin + 9;
-			const year = parseInt(entry.release_date);
+			const year =
+				type === "movies"
+					? parseInt(entry.release_date)
+					: type === "shows"
+					? parseInt(entry.first_air_date)
+					: parseInt(entry.date);
 			if (!year || year < decadeMin || year > decadeMax) {
 				return false;
 			}
 		}
-		if (genre) {
+		if (type !== "books" && genre) {
+			console.log("genre ids");
 			if (!entry.genre_ids.includes(parseInt(genre))) {
+				console.log("genre: " + genre);
+				console.log("genre ids: " + entry.genre_ids.toString());
 				return false;
 			}
 		}
-		if (runtime) {
+		if (type === "movies" && runtime) {
 			const entryRuntime = runtimeData.current.get(entry.title);
 			if (!entryRuntime || parseInt(entryRuntime) > parseInt(runtime)) {
 				return false;
@@ -118,12 +155,30 @@ export default function Results(props) {
 
 	function getRandNum(selectedResults, invalidResults) {
 		let index;
-		const max = allData.current.length;
+		const max =
+			type === "movies"
+				? movieData.current.length
+				: type === "shows"
+				? showData.current.length
+				: bookData.current.length;
 		do {
 			index = Math.floor(Math.random() * max);
+			console.log("find index");
 		} while (
-			selectedResults.includes(allData.current[index]) &&
-			invalidResults.includes(allData.current[index])
+			selectedResults.includes(
+				type === "movies"
+					? movieData.current[index]
+					: type === "shows"
+					? showData.current[index]
+					: bookData.current[index]
+			) &&
+			invalidResults.includes(
+				type === "movies"
+					? movieData.current[index]
+					: type === "shows"
+					? showData.current[index]
+					: bookData.current[index]
+			)
 		);
 		return index;
 	}
@@ -131,12 +186,16 @@ export default function Results(props) {
 	React.useEffect(() => {
 		if (number > 0) {
 			const selectedResults = addResults();
-			let allResults;
+			let allResults = [];
 			if (type === "movies") {
 				allResults = selectedResults.map((entry) => (
 					<SingleResult
 						title={entry.title}
-						img={`https://image.tmdb.org/t/p/w500${entry.poster_path}`}
+						img={
+							entry.poster_path
+								? `https://image.tmdb.org/t/p/w500${entry.poster_path}`
+								: ""
+						}
 						year={entry.release_date.substring(0, 4)}
 						summary={entry.overview}
 						movieId={entry.id}
@@ -144,16 +203,30 @@ export default function Results(props) {
 					/>
 				));
 			} else if (type === "shows") {
-				console.log("map shows");
 				allResults = selectedResults.map((entry) => {
-					console.log(entry);
 					return (
 						<SingleResult
 							title={entry.name}
-							img={`https://image.tmdb.org/t/p/w500${entry.backdrop_path}`}
+							img={
+								entry.backdrop_path
+									? `https://image.tmdb.org/t/p/w500${entry.backdrop_path}`
+									: ""
+							}
 							year={entry.first_air_date.substring(0, 4)}
 							summary={entry.overview}
 							movieId={entry.id}
+						/>
+					);
+				});
+			} else if (type === "books") {
+				allResults = selectedResults.map((entry) => {
+					return (
+						<SingleResult
+							title={entry.title}
+							year={entry.date}
+							summary={entry.description}
+							isBook={true}
+							bookUrl={entry.id}
 						/>
 					);
 				});
@@ -166,7 +239,7 @@ export default function Results(props) {
 		return () => {
 			console.log("done");
 		};
-	}, [allData.current, number, update]);
+	}, [movieData.current, showData.current, bookData.current, number, update]);
 
 	return (
 		<div className="results">

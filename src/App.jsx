@@ -14,12 +14,15 @@ function App() {
 	const [update, setUpdate] = React.useState(false);
 	const [decade, setDecade] = React.useState(undefined);
 	const [genre, setGenre] = React.useState(undefined);
-	const [runtime, setRuntime] = React.useState(240);
+	const [runtime, setRuntime] = React.useState(180);
 
 	// Tab Functions
 	function handleTabClick(type) {
 		console.log(type);
 		setGeneratorType(type);
+		setDecade(undefined);
+		setGenre(undefined);
+		setRuntime(undefined);
 	}
 
 	const tabs = [{ type: "books" }, { type: "movies" }, { type: "shows" }];
